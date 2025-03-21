@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<canvas id="fractal" width="800" height="600"></canvas>
+<script>
+    const canvas = document.getElementById('fractal');
+    const ctx = canvas.getContext('2d');
+
+    function drawTriangle(points) {
+        ctx.beginPath();
+        ctx.moveTo(points[0][0], points[0][1]);
+        ctx.lineTo(points[1][0], points[1][1]);
+        ctx.lineTo(points[2][0], points[2][1]);
+        ctx.closePath();
+        ctx.strokeStyle = `hsl(${Math.random() * 360}, 70%, 50%)`;
+        ctx.stroke();
+    }
+
+    function sierpinski(points, depth) {
+        drawTriangle(points);
+        if (depth > 0) {
+            const mid = (p1, p2) => [(p1[0] + p2[0])/2, (p1[1] + p2[1])/2];
+            sierpinski([points[0], mid(points[0], points[1]), mid(points[0], points[2])], depth - 1);
+            sierpinski([points[1], mid(points[0], points[1]), mid(points[1], points[2])], depth - 1);
+            sierpinski([points[2], mid(points[2], points[1]), mid(points[0], points[2])], depth - 1);
+        }
+    }
+
+    // 初始化坐标并启动绘制
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    sierpinski([[400, 50], [100, 550], [700, 550]], 5);
+</script>
+</html>
